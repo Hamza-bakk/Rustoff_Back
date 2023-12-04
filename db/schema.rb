@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_12_04_133134) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_04_135939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "cart_items", force: :cascade do |t|
     t.bigint "cart_id", null: false
     t.bigint "item_id", null: false
-    t.integer "quantity"
+    t.integer "quantity", default: 1
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
@@ -31,6 +31,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_133134) do
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "label"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -39,6 +45,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_133134) do
     t.string "alt"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "category"
+    t.boolean "disabled"
   end
 
   create_table "jwt_denylist", force: :cascade do |t|
@@ -52,12 +60,12 @@ ActiveRecord::Schema[7.1].define(version: 2023_12_04_133134) do
   create_table "quotes", force: :cascade do |t|
     t.text "description"
     t.string "email"
-    t.integer "admin_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "first_name"
     t.string "last_name"
     t.string "category"
+    t.boolean "processed", default: false
   end
 
   create_table "users", force: :cascade do |t|
