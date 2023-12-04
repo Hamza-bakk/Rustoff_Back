@@ -19,9 +19,7 @@ class Item < ApplicationRecord
   # Relation : Si l'Item est supprimé, supprimez également tous les OrderItems associés.
   has_many :order_items, dependent: :destroy
 
-  # Options de catégorie disponibles pour les Items.
   CATEGORY_OPTIONS = ['3D', 'Animation', 'Logo', 'Twitch', 'Merch', 'Tattoo', 'Illustrations', 'Avatars', 'Autres']
 
-  # Utilisation d'une énumération pour gérer la catégorie.
   enum category_enum: CATEGORY_OPTIONS
 end
