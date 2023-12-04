@@ -1,10 +1,23 @@
 class User < ApplicationRecord
+  # after_create :welcome_send
+  after_create :create_cart
+  has_one_attached :avatar
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         :jwt_authenticatable,
-	       jwt_revocation_strategy: JwtDenylist
+  :recoverable, :rememberable, :validatable,
+  :jwt_authenticatable,
+  jwt_revocation_strategy: JwtDenylist
+  
+  def create_cart
+    Cart.create(user: self) #Permt de créer un panier aprés au même moment que l'inscription
+  end
 
-  has_many :properties
+  # def welcome_send
+  #   UserMailer.welcome_email(self).deliver_now
+  # end
+  
+  has_many :orders, dependent: :destroy
+  has_one :cart, dependent: :destroy
 end
