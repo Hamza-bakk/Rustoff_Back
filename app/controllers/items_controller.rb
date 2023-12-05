@@ -16,7 +16,9 @@ class ItemsController < ApplicationController
   # GET /items/1 or /items/1.json
   def show
     @item = Item.find(params[:id])
+    render json: @item
   end
+  
   
   # GET /items/new
   def new
