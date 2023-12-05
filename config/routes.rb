@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   resources :properties
+  resources :cart
+  resources :items
   resources :user, only: :show
   devise_for :users,
              controllers: {

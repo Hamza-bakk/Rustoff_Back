@@ -13,5 +13,5 @@ class Item < ApplicationRecord
 
   CATEGORY_OPTIONS = ['3D', 'Animation', 'Logo', 'Twitch', 'Merch', 'Tattoo', 'Illustrations', 'Avatars', 'Autres']
 
-  enum category_enum: CATEGORY_OPTIONS
+  # enum category_enum: CATEGORY_OPTIONS
 end
