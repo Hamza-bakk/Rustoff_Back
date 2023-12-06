@@ -1,33 +1,45 @@
 class ProfilesController < ApplicationController
-    before_action :authenticate_user!  # Avant chaque action, assurez-vous que l'utilisateur est authentifié.
-  
-    def show
-      @user = current_user  # Récupérez l'utilisateur actuellement connecté.
-      restrict_access unless current_user == @user
-    end
-  
-    def edit
-      @user = current_user  # Récupérez l'utilisateur actuellement connecté pour l'édition de son profil.
-    end
-  
-    def update
-      @user = current_user  # Récupérez l'utilisateur actuellement connecté pour la mise à jour de son profil.
-      if @user.update(profile_params)  # Tentez de mettre à jour les informations du profil avec les paramètres autorisés.
-        redirect_to profile_path, notice: "Profil mis à jour avec succès."  # Redirigez l'utilisateur vers la page de profil avec un message de succès.
-      else
-        render :edit  # Si la mise à jour échoue en raison de validations, affichez à nouveau le formulaire d'édition.
-      end
-    end
-  
-    private
-  
-    def restrict_access
-      flash[:alert] = "Accès refusé. Vous ne pouvez pas accéder au profil d'un autre utilisateur."
-      redirect_to root_path
-    end
-  
-    def profile_params
-      params.require(:user).permit(:email)  # Autorisez uniquement la mise à jour de l'adresse e-mail de l'utilisateur.
+  before_action :authenticate_user!, except: [:show]
+
+  def show
+    @user = current_user
+    restrict_access unless current_user == @user
+  end
+
+  def edit
+    @user = current_user
+  end
+
+  def destroy
+    @user = current_user
+    Rails.logger.info("Trying to delete user with ID: #{@user.id}")
+    
+    if @user.destroy
+      # Ajoutez ici la logique de redirection après la suppression du profil.
+      Rails.logger.info("User deleted successfully.")
+    else
+      Rails.logger.error("Error deleting user: " + @user.errors.full_messages.join(', '))
     end
   end
   
+
+  def update
+    @user = current_user
+    if @user.update(profile_params)
+      redirect_to profile_path, notice: "Profil mis à jour avec succès."
+    else
+      render :edit
+    end
+  end
+
+  private
+
+  def restrict_access
+    flash[:alert] = "Accès refusé. Vous ne pouvez pas accéder au profil d'un autre utilisateur."
+    redirect_to root_path
+  end
+
+  def profile_params
+    params.require(:user).permit(:email)
+  end
+end
