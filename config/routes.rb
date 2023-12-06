@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   resources :cart
   resources :items
   resources :user, only: :show
+  resources :profiles, only: [:show, :destroy]
+
   devise_for :users,
              controllers: {
                sessions: 'users/sessions',
