@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  resources :properties
   resources :cart
   resources :items
+  resources :cart_items
   resources :user, only: :show
   resources :profiles, only: [:show, :destroy]
 

@@ -14,6 +14,7 @@ items_data = [
     category: "Animation",
     disabled: false
   },
+  
   {
     title: "Item 2",
     description: "Description for Item 2",
