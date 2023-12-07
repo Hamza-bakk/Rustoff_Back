@@ -309,7 +309,7 @@ Devise.setup do |config|
   # ==> Configuration for :registerable
 
   config.jwt do |jwt|
-		jwt.secret = Rails.application.credentials.devise[:jwt_secret_key]
+		jwt.secret = ENV['SECRET_KEY_BASE']
 	end
 
   # When set to false, does not sign a user in automatically after their password is
