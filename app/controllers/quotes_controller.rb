@@ -1,21 +1,18 @@
 class QuotesController < ApplicationController
     before_action :set_quote, only: [:show, :mark, :destroy]  # Avant certaines actions, exécutez la méthode `set_quote` pour configurer l'objet @quote.
-    before_action :authenticate_user!  # Avant chaque action, assurez-vous que l'utilisateur est authentifié.
+    #before_action :authenticate_user!  # Avant chaque action, assurez-vous que l'utilisateur est authentifié.
   
     def new
       @quote = Quote.new  # Créez une nouvelle instance de Quote pour le formulaire de création.
     end
   
     def create
-      category_label = params[:quote][:category]  
-      category = Category.find_or_create_by(label: category_label)  # Recherchez ou créez une catégorie en fonction du libellé reçu du formulaire.
-      @quote = Quote.new(quote_params)  # Créez un nouvel objet Quote avec les paramètres du formulaire.
-      @quote.category = category.label  # Définissez la catégorie pour l'objet Quote.
+      @quote = Quote.new(quote_params)
   
-      if @quote.save  # Tentez de sauvegarder le devis.
-        redirect_to new_quote_path, notice: 'Devis créé avec succès.'  # Redirigez vers la page de création avec un message de succès.
+      if @quote.save
+        render json: @quote, status: :created
       else
-        render :new  # Si la création échoue en raison de validations, affichez à nouveau le formulaire de création.
+        render json: { errors: @quote.errors.full_messages }, status: :unprocessable_entity
       end
     end
   
