@@ -1,5 +1,4 @@
 class CartController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_cart, only: %i[ show edit update destroy ]
   
   # GET /carts or /carts.json
