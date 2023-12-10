@@ -11,11 +11,26 @@ Rails.application.routes.draw do
                registrations: 'users/registrations'
              }
   get '/member-data', to: 'members#show'
+  
+  get '/users', to: 'users#index'
+  namespace :api do
+    namespace :v1 do
+      get '/user_stats', to: 'dashboard#user_stats'
+      get '/quote_stats', to: 'dashboard#quote_stats'
+      get '/processed_quotes_count', to: 'dashboard#processed_quotes_count'
+      get '/unprocessed_quotes_count', to: 'dashboard#unprocessed_quotes_count'
+      get '/order_stats', to: 'dashboard#order_stats'
+      get '/item_stats', to: 'dashboard#item_stats'
+      get '/recent_orders', to: 'dashboard#recent_orders'
+      get '/users', to: 'dashboard#users'
+    end
+  end
 
-  resources :quotes, only: [:index, :new, :create, :show, :destroy] do
+  resources :quotes, only: [:index, :update, :destroy] do
     member do
-      post :mark, action: :mark
-      post :reprocess
+      put 'mark', to: 'quotes#mark'
+      put 'reprocess', to: 'quotes#reprocess'
+      delete 'destroy', to: 'quotes#destroy'
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

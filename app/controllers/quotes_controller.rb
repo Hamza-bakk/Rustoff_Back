@@ -2,6 +2,10 @@ class QuotesController < ApplicationController
     before_action :set_quote, only: [:show, :mark, :destroy]  # Avant certaines actions, exécutez la méthode `set_quote` pour configurer l'objet @quote.
     #before_action :authenticate_user!  # Avant chaque action, assurez-vous que l'utilisateur est authentifié.
   
+    def index
+      @quotes = Quote.all
+      render json: @quotes
+    end
     def new
       @quote = Quote.new  # Créez une nouvelle instance de Quote pour le formulaire de création.
     end
@@ -17,20 +21,19 @@ class QuotesController < ApplicationController
     end
   
     def mark
-      @quote.update(processed: params[:checked])  # Mettez à jour l'état du devis en fonction de la valeur de `params[:checked]`.
-      redirect_to dashboard_quotes_path, notice: 'État du devis mis à jour avec succès.'  # Redirigez vers le tableau de bord avec un message de succès.
+      @quote.update(processed: params[:checked])
+    
+      render json: @quote, status: :ok
     end
   
     def reprocess
-      quote = Quote.find(params[:id])  # Recherchez le devis par son identifiant.
-      quote.update(processed: false)  # Réinitialisez l'état du devis à non traité.
-      redirect_to dashboard_quotes_path, notice: 'État du devis mis à jour avec succès.'  # Redirigez vers le tableau de bord avec un message de succès.
+      @quote.update(processed: false)
+      render json: @quote, status: :ok
     end
   
     def destroy
-      @quote = Quote.find(params[:id])  # Recherchez le devis par son identifiant.
-      @quote.destroy  # Supprimez le devis.
-      redirect_to dashboard_quotes_path, notice: 'Devis supprimé avec succès.'  # Redirigez vers le tableau de bord avec un message de succès.
+      @quote.destroy
+      render json: { message: 'Devis supprimé avec succès.' }, status: :ok
     end
   
     def show
