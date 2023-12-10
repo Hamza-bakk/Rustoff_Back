@@ -4,7 +4,7 @@ class ItemsController < ApplicationController
   #La def destroy et create et edit concerne le coté admin qui peut avoir la gestion des items 
   def destroy
     @item.destroy
-    redirect_to dashboard_products_path, notice: "L'objet a été détruit avec succès."
+    render json: @items
   end
   
   # GET /items or /items.json
@@ -34,15 +34,11 @@ class ItemsController < ApplicationController
   # POST /items or /items.json
   def create
     @item = Item.new(item_params)
-    
-    respond_to do |format|
-      if @item.save
-        format.html { redirect_to item_url(@item), notice: "L'élément a été créé avec succès." }
-        format.json { render :show, status: :created, location: @item }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @item.errors, status: :unprocessable_entity }
-      end
+  
+    if @item.save
+      redirect_to @item, notice: 'Item was successfully created.'
+    else
+      render :new
     end
   end
   
@@ -65,6 +61,6 @@ class ItemsController < ApplicationController
   
   # Only allow a list of trusted parameters through.
   def item_params
-    params.require(:item).permit(:title, :description, :price, :image, :alt, :category)
+    params.require(:item).permit(:title, :description, :category, :price, :image_url, :alt)
   end
 end
