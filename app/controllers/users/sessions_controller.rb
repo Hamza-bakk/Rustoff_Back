@@ -4,9 +4,11 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(_resource, _opts = {})
+    cart_id = resource.cart&.id
     render json: {
       message: 'You are logged in.',
-      user: current_user
+      user: current_user,
+      cartId: cart_id
     }, status: :ok
   end
 

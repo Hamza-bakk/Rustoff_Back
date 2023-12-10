@@ -12,7 +12,7 @@ class CartController < ApplicationController
   # GET /carts/1 or /carts/1.json
   def show
     # user_id = params[:id] # Vous n'avez pas besoin de cela ici
-    token = request.headers['Authorization']&.split('Bearer ')&.last
+    cart_id = params[:id]
     @user = current_user
     @cart = Cart.find_or_create_by(user: current_user)
     @cart_items = @cart.cart_items
