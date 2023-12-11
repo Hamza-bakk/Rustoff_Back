@@ -6,14 +6,11 @@ class CartController < ApplicationController
     @carts = Cart.all
     user_id = params[:id]
     render json: @carts
-    puts "Current user: #{current_user.inspect}"
   end
   
   # GET /carts/1 or /carts/1.json
   def show
-    # user_id = params[:id] # Vous n'avez pas besoin de cela ici
     cart_id = params[:id]
-    cart = [@cart_items]
     @user = current_user
     @cart = Cart.find_or_create_by(user: current_user)
     @cart_items = @cart.cart_items
