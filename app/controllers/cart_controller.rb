@@ -1,5 +1,5 @@
 class CartController < ApplicationController
-  before_action :set_cart, only: %i[ show edit update destroy ]
+
   
   # GET /carts or /carts.json
   def index
@@ -13,6 +13,7 @@ class CartController < ApplicationController
   def show
     # user_id = params[:id] # Vous n'avez pas besoin de cela ici
     cart_id = params[:id]
+    cart = [@cart_items]
     @user = current_user
     @cart = Cart.find_or_create_by(user: current_user)
     @cart_items = @cart.cart_items

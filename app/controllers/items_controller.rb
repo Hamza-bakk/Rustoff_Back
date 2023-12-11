@@ -1,5 +1,4 @@
 class ItemsController < ApplicationController
-  before_action :set_item, only: %i[ show edit update destroy ]
   
   #La def destroy et create et edit concerne le coté admin qui peut avoir la gestion des items 
   def destroy

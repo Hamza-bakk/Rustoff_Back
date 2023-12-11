@@ -27,12 +27,8 @@ class UsersController < ApplicationController
     
     respond_to do |format|
       if @user.save
-        # Condition pour créer un panier si nécessaire
-        if @user.cart.nil?
-          @cart = Cart.create(user: @user)
-        end
         
-        UserMailer.with(user: @user).welcome_email.deliver_now
+        # UserMailer.with(user: @user).welcome_email.deliver_now
         
         format.html { redirect_to user_url(@user), notice: "L'utilisateur a été créé avec succès." }
         format.json { render :show, status: :created, location: @user }
