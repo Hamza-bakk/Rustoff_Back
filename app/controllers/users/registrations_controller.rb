@@ -10,9 +10,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def register_success
+    cart_id = resource.cart&.id
     render json: {
       message: 'Signed up sucessfully.',
-      user: current_user
+      user: current_user,
+      cartId: cart_id
     }, status: :ok
   end
 

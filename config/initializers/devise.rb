@@ -309,7 +309,13 @@ Devise.setup do |config|
   # ==> Configuration for :registerable
 
   config.jwt do |jwt|
-		jwt.secret = ENV['SECRET_KEY_BASE']
+		jwt.secret = Rails.application.credentials.secret_key_base
+    jwt.dispatch_requests = [
+      ['POST', %r{^/sign_in$}]
+    ]
+    jwt.revocation_requests = [
+      ['DELETE', %r{^/sign_out$}]
+    ]
 	end
 
   # When set to false, does not sign a user in automatically after their password is

@@ -1,5 +1,4 @@
 class CartItemsController < ApplicationController
-    before_action :set_cart_item, only: %i[ show edit update destroy ]
     
     # GET /cart_items or /cart_items.json
     def index
