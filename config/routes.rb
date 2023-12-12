@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :quotes, only: [:index, :update, :destroy] do
+  resources :quotes, only: [:index, :update, :destroy, :new, :create] do
     member do
       put 'mark', to: 'quotes#mark'
       put 'reprocess', to: 'quotes#reprocess'
