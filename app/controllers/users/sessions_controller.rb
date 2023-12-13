@@ -20,31 +20,17 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def destroy
-    # Assurez-vous que le token est récupéré correctement depuis les headers
-    token = request.headers['Authorization']&.split('Bearer ')&.last
-  
-    # Si le token est présent, décodez-le pour obtenir l'ID de l'utilisateur
-    if token.present?
-      # Utilisez la même clé pour le décodage que celle utilisée pour l'encodage
-      decoded_token = JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: 'HS256')
-      user_id = decoded_token[0]['id']
-  
-      # Si l'utilisateur est actuellement connecté, déconnectez-le
-      if user_signed_in? && current_user.id == user_id.to_i
-        sign_out(current_user)
-        render json: { message: 'You are logged out.' }, status: :ok
-      else
-        render json: { message: 'Hmm nothing happened.' }, status: :unauthorized
-      end
-    else
-      render json: { message: 'No token provided.' }, status: :unauthorized
-    end
-  rescue JWT::DecodeError => e
-    render json: { message: "Failed to decode token: #{e.message}" }, status: :unauthorized
+    log_out
+    render json: { message: 'You are logged out.' }, status: :ok
   end
 
 
   private
+
+   def log_out
+    current_user&.update(token: nil) # Assurez-vous de mettre à jour correctement le champ du token
+    sign_out(current_user)
+  end
 
   def respond_with(_resource, _opts = {})
     cart_id = resource.cart&.id
