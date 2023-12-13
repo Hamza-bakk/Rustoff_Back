@@ -17,6 +17,20 @@ class CartController < ApplicationController
     @cart_total = @cart.total_price
     render json: { cart_total: @cart_total, cart_items: @cart_items, cart: @cart, user: @user }
   end
+
+  def destroy_item
+    @cart = Cart.find(params[:id])
+    @cart_item = @cart.cart_items.find(params[:item_id])
+    @cart_item.destroy
+  
+    render json: { 
+      cart_id: @cart.id,
+      cart_items: @cart.cart_items,
+      cart_total: @cart.total_price,
+      notice: "L'article a été supprimé du panier avec succès."
+    }
+  end
+  
   
   
   # GET /carts/new

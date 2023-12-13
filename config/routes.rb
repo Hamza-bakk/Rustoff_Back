@@ -1,19 +1,26 @@
 Rails.application.routes.draw do
-  resources :cart
+  resources :cart do 
+    member do
+      delete 'item/:item_id', to: 'cart#destroy_item', as: 'cart_item'
+    end
+  end
+  
   resources :items
   resources :cart_items
   resources :user, only: :show
   resources :profiles, only: [:show, :destroy]
   
   devise_for :users,
-  controllers: {
-    sessions: 'users/sessions',
-    registrations: 'users/registrations'
-  }
+    controllers: {
+      sessions: 'users/sessions',
+      registrations: 'users/registrations',
+      passwords: 'users/edit_password'  # Assure-toi que le chemin est correct
+    }
   get '/member-data', to: 'members#show'
   
   post '/users/sign_in', to: 'users/sessions#create'
   delete '/users/sign_out', to: 'users/sessions#destroy', as: :custom_destroy_user_session
+  put '/users/edit_password/update', to: 'users/edit_password#update', as: 'update_user_password'
   
   
   get '/users', to: 'users#index'
