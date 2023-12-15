@@ -73,9 +73,10 @@ L'essence du projet consiste en la conception et le développement d'un site web
 The following tools were used in this project:
 
 - [Ruby]
+- [React]
 - [Tailwind]
 - [JS]
-- [Stripe]
+- [Stripe] (En cours, probléme de conception avec le Front)
 - [Mailjet]
 - [PostgreSQL]
 
