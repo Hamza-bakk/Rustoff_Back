@@ -1,4 +1,5 @@
 class Users::SessionsController < Devise::SessionsController
+
   respond_to :json
 
   def create
@@ -34,10 +35,13 @@ class Users::SessionsController < Devise::SessionsController
 
   def respond_with(_resource, _opts = {})
     cart_id = resource.cart&.id
+    isAdmin = resource.admin
+    puts isAdmin
     render json: {
       message: 'You are logged in.',
       user: current_user,
-      cartId: cart_id
+      cartId: cart_id,
+      isAdmin: isAdmin,
     }, status: :ok
   end
 
