@@ -1,44 +1,44 @@
 class CheckoutController < ApplicationController
-  
-    def create
-      
-      #Cette partie permet de créer le paiement stripe a travers l'API
-      
-      @total = params[:total].to_d
-      @session = Stripe::Checkout::Session.create(
-        payment_method_types: ['card'],
-        line_items: [
-          {
-            price_data: {
-              currency: 'eur',
-              unit_amount: (@total*100).to_i,
-              product_data: {
-                name: 'Rails Stripe Checkout',
-              },
+  def create
+    puts "Params received: #{params.inspect}"
+
+    # Cette partie permet de créer le paiement stripe à travers l'API
+    @total = params[:total].to_d
+    puts "Current User ID: #{current_user&.id}"
+    @session = Stripe::Checkout::Session.create(
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'eur',
+            unit_amount: (@total * 100).to_i,
+            product_data: {
+              name: 'Rails Stripe Checkout',
             },
-            quantity: 1
           },
-        ],
-        mode: 'payment',
-        success_url: checkout_success_url + '?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url: checkout_cancel_url
-      )
-      redirect_to @session.url, allow_other_host: true
-    end
+          quantity: 1
+        },
+      ],
+      mode: 'payment',
+      success_url: checkout_success_url + '?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: checkout_cancel_url
+    )
+    puts "Session ID: #{@session.id}"
+    render json: { id: @session.id }
+    puts @session.inspect
+    puts "Current User ID: #{current_user&.id}"
+  end
     
     def success
   
-      # Après avoir obtenu les informations de paiement depuis Stripe, vous pouvez enregistrer la commande
-      # Vous devez personnaliser cette logique en fonction de votre modèle de commande
-      #Succès est transité vers orders show afin de créer l'ID order après paiement ainsi sécurisé la base de données    
+    puts "Current User ID: #{current_user&.id}"
+
       @session = Stripe::Checkout::Session.retrieve(params[:session_id])
       @payment_intent = Stripe::PaymentIntent.retrieve(@session.payment_intent)
       
-      # Par exemple, si vous avez un modèle de commande nommé Order :
       @order = Order.new(
         user_id: current_user.id, # Assurez-vous que l'utilisateur est connecté
-        total_price: @total, # Remplacez cela par le montant total de la commande
-        # Autres attributs de commande que vous souhaitez enregistrer
+        total_price: @total, 
       )
       
       if @order.save
@@ -63,7 +63,8 @@ class CheckoutController < ApplicationController
       else
         # La sauvegarde de la commande a échoué, gérez l'erreur en conséquence
         flash[:error] = 'La commande n\'a pas pu être enregistrée.'
-        redirect_to root_path
+        render json: { success: true } # Au lieu de rediriger, renvoyez une réponse JSON au frontend
+
       end
     end
     
