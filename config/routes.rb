@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     controllers: {
       sessions: 'users/sessions',
       registrations: 'users/registrations',
-      passwords: 'users/edit_password'  # Assure-toi que le chemin est correct
+      passwords: 'users/edit_password' 
     }
   get '/member-data', to: 'members#show'
   
