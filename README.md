@@ -6,8 +6,8 @@
   <!-- <a href="https://rustoff.netlify.app">Demo</a> -->
 </div>
 
-<h1 align="center">Rustoff</h1>
-<h1 align="center">Projet fait par une équipe de développeur de 4 personnes : Aglae - Timmy - Florian - Hamza</h1>
+<h1 align="center">Rustoff_back (React with Rails)</h1>
+<h1 align="center">Projet fait par une équipe de 4 développeurs : Aglae - Timmy - Florian - Hamza</h1>
 
 <p align="center">
   <img alt="Github top language" src="https://img.shields.io/github/languages/top/Hamza-bakk/rustoff?color=56BEB8">
