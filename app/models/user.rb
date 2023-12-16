@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  # after_create :welcome_send
+  after_create :welcome_send
   attr_accessor :token
   after_create :create_jwt_and_cart
   has_one_attached :avatar
@@ -33,4 +33,10 @@ class User < ApplicationRecord
   
   has_many :orders, dependent: :destroy
   has_one :cart, dependent: :destroy
+
+  def welcome_send
+    UserMailer.welcome_email(self).deliver_now
+  end
+
 end
+
