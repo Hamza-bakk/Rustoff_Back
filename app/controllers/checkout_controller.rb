@@ -1,7 +1,7 @@
 class CheckoutController < ApplicationController
   def create
     puts "Params received: #{params.inspect}"
-  
+    
     # Cette partie permet de créer le paiement stripe à travers l'API
     @total = params[:total].to_d
     puts "Current User ID: #{current_user&.id}"
@@ -23,49 +23,57 @@ class CheckoutController < ApplicationController
       success_url: "http://localhost:5173/order",
     )
     
+    # Stockez @session dans la session pour y accéder dans d'autres actions
+    session[:checkout_session] = @session.id
+
+    order_details = {
+      total: @total,
+      cart_items: params[:cartItems]
+    }
+
+    session[:order_details] = order_details
+
     render json: { id: @session.id, sessionUrl: @session.url }
-    puts "Session url aprés : #{@session.url}"
+    puts "Session url après : #{@session.url}"
   end
   
-    
-    def success
-    puts "Current User ID: #{current_user&.id}"
+ def order
+  if session[:checkout_session].present?
+    # Accédez à @session en utilisant l'ID stocké dans la session
+    @session = Stripe::Checkout::Session.retrieve(session[:checkout_session])
+    puts "Current User avant la session include: #{current_user&.id}"
 
-      @session = Stripe::Checkout::Session.retrieve(params[:session_id])
-      @payment_intent = Stripe::PaymentIntent.retrieve(@session.payment_intent)
-      
-      @order = Order.new(
-        user_id: current_user.id, # Assurez-vous que l'utilisateur est connecté
-        total_price: @total, 
-      )
-      
-      if @order.save
-        # Enregistrez les détails de la commande (par exemple, les articles commandés) ici
-        # Assurez-vous d'ajuster cette logique en fonction de votre modèle de commande et de panier
-        
-        # Exemple fictif pour ajouter un article à la commande (à adapter à votre modèle) :
-        CartItem.where(cart_id: current_user.cart.id).each do |cart_item|
-          @order.order_items.create(
-            item_id: cart_item.item_id,
-            quantity: cart_item.quantity,
-            unit_price: cart_item.item.price # Utilisez l'attribut unit_price pour stocker le prix de l'article
-          )
-        end
-        
-        
-        # Videz le panier de l'utilisateur après avoir enregistré la commande
-        current_user.cart.cart_items.destroy_all
-        
-        # Redirigez l'utilisateur vers une page de confirmation de commande
-        redirect_to order_path(@order)
+    if @session.url.include?("http://localhost:5173/order")
+      puts "Current User ID: #{current_user&.id}"
+
+      order = Order.new(total_price: session[:order_details][:total])
+
+      session[:order_details][:cart_items].each do |item_params|
+        item = Item.find(item_params["id"])
+        quantity = item_params["quantity"].to_i
+        order_item = order.order_items.build(
+          item: item,
+          quantity: quantity,
+          unit_price: item.price
+        )
+        order_item.save # Enregistrez l'order_item dans la base de données
+      end
+
+      # Enregistrez la commande dans la base de données
+      if order.save
+        puts "Order created successfully after successful payment."
       else
-        # La sauvegarde de la commande a échoué, gérez l'erreur en conséquence
-        flash[:error] = 'La commande n\'a pas pu être enregistrée.'
-        render json: { success: true } # Au lieu de rediriger, renvoyez une réponse JSON au frontend
-
+        # Gérez l'erreur si la sauvegarde de la commande échoue
+        puts "Error: Order creation failed. Errors: #{order.errors.full_messages.join(', ')}"
       end
     end
-    
-    def cancel
-    end
+
+    # Supprimez l'ID de la session une fois qu'il a été utilisé
+    session.delete(:checkout_session)
+    session.delete(:order_details)
   end
+
+  render json: { order_details: session[:order_details] }
+end
+
+end
