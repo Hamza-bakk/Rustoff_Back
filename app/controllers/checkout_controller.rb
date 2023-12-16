@@ -1,7 +1,7 @@
 class CheckoutController < ApplicationController
   def create
     puts "Params received: #{params.inspect}"
-
+  
     # Cette partie permet de créer le paiement stripe à travers l'API
     @total = params[:total].to_d
     puts "Current User ID: #{current_user&.id}"
@@ -20,14 +20,13 @@ class CheckoutController < ApplicationController
         },
       ],
       mode: 'payment',
-      success_url: checkout_success_url + '?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: checkout_cancel_url
+      success_url: "http://localhost:5173/order",
     )
-    puts "Session ID: #{@session.id}"
-    render json: { id: @session.id }
-    puts @session.inspect
-    puts "Current User ID: #{current_user&.id}"
+    
+    render json: { id: @session.id, sessionUrl: @session.url }
+    puts "Session url aprés : #{@session.url}"
   end
+  
     
     def success
     puts "Current User ID: #{current_user&.id}"
