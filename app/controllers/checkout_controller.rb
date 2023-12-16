@@ -30,7 +30,6 @@ class CheckoutController < ApplicationController
   end
     
     def success
-  
     puts "Current User ID: #{current_user&.id}"
 
       @session = Stripe::Checkout::Session.retrieve(params[:session_id])
