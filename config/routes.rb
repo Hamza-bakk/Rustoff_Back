@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   
   resources :items
   resources :cart_items
+  resources :orders
   resources :user, only: :show
   resources :profiles, only: [:show, :destroy]
   
@@ -50,6 +51,9 @@ Rails.application.routes.draw do
     get 'success', to: 'checkout#success', as: 'checkout_success'
     get 'cancel', to: 'checkout#cancel', as: 'checkout_cancel'
   end
+  
+
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   
   # Defines the root path route ("/")
