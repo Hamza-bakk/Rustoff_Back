@@ -1,6 +1,6 @@
 class User < ApplicationRecord
-  after_create :welcome_send
   attr_accessor :token
+  after_create :welcome_send
   after_create :create_jwt_and_cart
   has_one_attached :avatar
   

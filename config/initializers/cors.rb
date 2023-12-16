@@ -19,7 +19,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     # origins 'https://rustoff.vercel.app'
     # origins 'http://localhost:5173'
-    origins 'http://127.0.0.1:5173'
+    origins 'http://localhost:5173'
     resource '*',
       headers: :any,
       expose: ['access-token', 'expiry', 'token-type', 'Authorization'],
@@ -27,17 +27,6 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       credentials: true
     
   end
-
-  allow do
-    origins 'https://checkout.stripe.com'
-
-    resource '*',
-      headers: :any,
-      methods: [:options],
-      credentials: true
-  end
-
-  
 end
 
 

@@ -54,4 +54,3 @@ gem "devise-jwt", "~> 0.11.0"
 gem "rack-cors", "~> 2.0"
 gem 'dotenv-rails'
 gem 'stripe'
-gem "letter_opener", group: :development
