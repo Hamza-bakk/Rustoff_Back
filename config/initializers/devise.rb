@@ -309,14 +309,16 @@ Devise.setup do |config|
   # ==> Configuration for :registerable
 
   config.jwt do |jwt|
-		jwt.secret = ENV["DEVISE_JWT_SECRET_KEY"]
+    jwt.secret = ENV["DEVISE_JWT_SECRET_KEY"]
+    jwt.expiration_time = 24.hours.to_i
     jwt.dispatch_requests = [
       ['POST', %r{^/sign_in$}]
     ]
     jwt.revocation_requests = [
       ['DELETE', %r{^/sign_out$}]
     ]
-	end
+  end
+  
 
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
