@@ -27,6 +27,17 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       credentials: true
     
   end
+
+  allow do
+    origins 'https://checkout.stripe.com'
+
+    resource '*',
+      headers: :any,
+      methods: [:options],
+      credentials: true
+  end
+
+  
 end
 
 
