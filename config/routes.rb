@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   
   post '/users/sign_in', to: 'users/sessions#create'
   delete '/users/sign_out', to: 'users/sessions#destroy', as: :custom_destroy_user_session
-  put '/users/edit_password/update', to: 'users/edit_password#update', as: 'update_user_password'
+  put '/users/edit_password/update/:id', to: 'users/edit_password#update', as: 'update_user_password'
   
   
   get '/users', to: 'users#index'
