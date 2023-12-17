@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: %i[ show edit update destroy ]
+  before_action :set_order, only: %i[show edit update destroy]
   
   # GET /orders or /orders.json
   def index
@@ -11,10 +11,23 @@ class OrdersController < ApplicationController
   
   # GET /orders/1 or /orders/1.json
   def show
-    @orders = current_user.orders.order(created_at: :desc)
-    @order = Order.find(params[:id])
-    
+    @user = User.find(params[:id])
+    @orders = Order.where(user_id: @user.id)
+    @order_items = OrderItem.all
+    @items = Item.all
+  
+    # Créer une structure de données pour inclure à la fois les commandes et les order_items
+    response_data = {
+      user: @user,
+      orders: @orders.as_json(include: :order_items),  # Inclure les détails des order_items dans les commandes
+      order_items: @order_items,
+      items: @items
+    }
+  
+    render json: response_data
   end
+  
+  
   
 
   # GET /orders/new
