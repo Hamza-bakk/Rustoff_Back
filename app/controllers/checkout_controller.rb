@@ -37,43 +37,36 @@ class CheckoutController < ApplicationController
     puts "Session url après : #{@session.url}"
   end
   
- def order
-  if session[:checkout_session].present?
-    # Accédez à @session en utilisant l'ID stocké dans la session
-    @session = Stripe::Checkout::Session.retrieve(session[:checkout_session])
-    puts "Current User avant la session include: #{current_user&.id}"
-
-    if @session.url.include?("http://localhost:5173/order")
-      puts "Current User ID: #{current_user&.id}"
-
-      order = Order.new(total_price: session[:order_details][:total])
-
-      session[:order_details][:cart_items].each do |item_params|
-        item = Item.find(item_params["id"])
-        quantity = item_params["quantity"].to_i
-        order_item = order.order_items.build(
-          item: item,
-          quantity: quantity,
-          unit_price: item.price
+  def order
+      # Utilisez params["checkout"] pour accéder aux données de la requête
+      order_details = params["checkout"]
+  
+      ActiveRecord::Base.transaction do
+        # Créer la commande
+        order = Order.new(
+          user_id: current_user.id,
+          total_price: order_details["total"]
         )
-        order_item.save # Enregistrez l'order_item dans la base de données
-      end
-
-      # Enregistrez la commande dans la base de données
-      if order.save
-        puts "Order created successfully after successful payment."
-      else
-        # Gérez l'erreur si la sauvegarde de la commande échoue
-        puts "Error: Order creation failed. Errors: #{order.errors.full_messages.join(', ')}"
-      end
+        order.save!
+  
+        # Créer des order_items pour chaque élément du panier
+        order_details["cartItems"].each do |cart_item|
+          order_item = OrderItem.new(
+            order: order,
+            item_id: cart_item["id"],
+            quantity: cart_item["quantity"],
+            unit_price: cart_item["price"].to_d
+          )
+          order_item.save!
+        end
+  
+      # Réinitialiser les détails de la commande de la session
+      session[:order_details] = nil
+  
+      render json: { success: true, order_id: order.id }
+    else
+      render json: { success: false, error: "Utilisateur non authentifié" }
     end
-
-    # Supprimez l'ID de la session une fois qu'il a été utilisé
-    session.delete(:checkout_session)
-    session.delete(:order_details)
   end
-
-  render json: { order_details: session[:order_details] }
-end
-
+  
 end
