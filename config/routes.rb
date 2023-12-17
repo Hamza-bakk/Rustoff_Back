@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :cart_items
   resources :orders
   resources :user, only: :show
-  resources :profiles, only: [:show, :destroy]
+  resources :profiles, only: [:show, :update, :destroy]
   
   devise_for :users,
     controllers: {
