@@ -10,10 +10,10 @@ class ProfilesController < ApplicationController
 
   def destroy
     @user = User.find(params[:id])
-  
+
     if @user
       Rails.logger.info("Trying to delete user with ID: #{@user.id}")
-      
+
       if @user.destroy
         Rails.logger.info("User deleted successfully.")
         render json: { message: "Compte supprimé avec succès." }, status: :ok
@@ -26,14 +26,13 @@ class ProfilesController < ApplicationController
       render json: { error: "Utilisateur non trouvé." }, status: :unprocessable_entity
     end
   end
-  
 
   def update
-    @user = current_user
+    @user = User.find(params[:id])
     if @user.update(profile_params)
-      redirect_to profile_path, notice: "Profil mis à jour avec succès."
+      render json: { message: "Profil mis à jour avec succès." }, status: :ok
     else
-      render :edit
+      render json: { error: @user.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
   end
 
