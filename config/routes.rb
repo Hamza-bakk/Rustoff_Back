@@ -48,7 +48,7 @@ Rails.application.routes.draw do
 
   scope '/checkout' do
     post 'create', to: 'checkout#create', as: 'checkout_create'
-    get 'order', to: 'checkout#order', as: 'checkout_order'
+    post 'order', to: 'checkout#order', as: 'checkout_order'
   end
   #4242 4242 4242 4242
 
