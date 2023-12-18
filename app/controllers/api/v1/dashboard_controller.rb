@@ -28,7 +28,8 @@ module Api
       end
 
       def recent_orders
-        render json: Order.where(created_at: (Time.now - 24.hours)..Time.now).order(created_at: :desc)
+        orders = Order.where(created_at: (Time.now - 24.hours)..Time.now).order(created_at: :desc)
+        render json: orders
       end
 
       def users
