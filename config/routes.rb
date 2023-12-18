@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   
   resources :items
   resources :cart_items
-  resources :orders, only: [:show]
+  resources :orders, only: [:show, :index]
   resources :user, only: :show
   resources :profiles, only: [:show, :update, :destroy]
   
@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       get '/item_stats', to: 'dashboard#item_stats'
       get '/recent_orders', to: 'dashboard#recent_orders'
       get '/users', to: 'dashboard#users'
+      get '/orders', to: 'dashboard#users'
     end
   end
   
@@ -50,7 +51,6 @@ Rails.application.routes.draw do
     post 'create', to: 'checkout#create', as: 'checkout_create'
     post 'order', to: 'checkout#order', as: 'checkout_order'
   end
-  #4242 4242 4242 4242
 
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
