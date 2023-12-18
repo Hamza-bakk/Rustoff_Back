@@ -19,7 +19,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     # origins 'https://rustoff.vercel.app'
     # origins 'http://localhost:5173'
-    origins 'http://localhost:5173'
+    origins 'https://rustoff.vercel.app'
     resource '*',
       headers: :any,
       expose: ['access-token', 'expiry', 'token-type', 'Authorization'],
