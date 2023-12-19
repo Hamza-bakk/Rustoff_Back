@@ -2,6 +2,7 @@ class ItemsController < ApplicationController
   
   #La def destroy et create et edit concerne le coté admin qui peut avoir la gestion des items 
   def destroy
+    set_item # Call set_item to initialize @item
     @item.destroy
     render json: @items
   end
