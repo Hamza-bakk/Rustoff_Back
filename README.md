@@ -66,7 +66,6 @@ L'essence du projet consiste en la conception et le développement d'un site web
 ## :rocket: Links ##
 
 - Lien Trello : https://bitly.ws/USyi
-- Lien Production Front : https://rustoff.vercel.app/
 - Base des données RUSTOFF : https://bitly.ws/USyb
 ## :rocket: Technologies ##
 
